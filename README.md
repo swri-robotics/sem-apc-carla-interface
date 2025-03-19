@@ -10,7 +10,7 @@ After cloning the package into your ROS workspace src directory and building you
 `ros2 launch carla_shell_bridge main.launch.py`
 
 ## Configuring CARLA
-Below is a list of all the different parameters that can be chnage to configure the CARLA simulator to help test different scenarios or performance. The parameters can be changed in `carla_interface/config/carla_config.yaml`
+Below is a list of all the different parameters that can be change to configure the CARLA simulator to help test different scenarios or enhance simulation performance. The parameters can be changed in [`carla_interface/config/carla_config.yaml`](config/carla_config.yaml)
 
 ### Server Connection Parameters:
 
