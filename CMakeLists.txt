@@ -1,101 +1,102 @@
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.8)
 project(carla_shell_bridge)
 
-## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
 
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
-
-set(COMMON_DEPS
-  carla_msgs  
-  rospy
-  std_msgs
-  nodelet
-  swri_nodelet
-)
-
-find_package(catkin REQUIRED COMPONENTS
-  ${COMMON_DEPS})
-
-catkin_package(
-  LIBRARIES carla_shell_bridge
-  CATKIN_DEPENDS
-    ${COMMON_DEPS}
-)
-
-###########
-## Build ##
-###########
-
-## Specify additional locations of header files
-## Your package locations should be listed before other locations
-include_directories(
-  include
-  ${catkin_INCLUDE_DIRS}
-)
-
-## Declare a C++ library
-add_library(
-  ${PROJECT_NAME}
-  src/nodelets/carla_vehicle_interface.cpp
-)
-
-target_link_libraries(
-  ${PROJECT_NAME}
-  ${catkin_LIBRARIES}
-)
-
-add_dependencies(
-  ${PROJECT_NAME} 
-  ${${PROJECT_NAME}_EXPORTED_TARGETS} 
-  ${catkin_EXPORTED_TARGETS}
-)
-
-set_target_properties(
-  ${PROJECT_NAME} 
-  PROPERTIES COMPILE_FLAGS "-std=c++14 -DPCL_NO_PRECOMPILE"
-)
-
-swri_nodelet_add_node(carla_simulation_vehicle_interface_node ${PROJECT_NAME} CarlaSimulationVehicleInterface)
-target_link_libraries(carla_simulation_vehicle_interface_node ${PROJECT_NAME})
-set_target_properties(carla_simulation_vehicle_interface_node PROPERTIES COMPILE_FLAGS "-std=c++14 -DPCL_NO_PRECOMPILE")
-add_dependencies(carla_simulation_vehicle_interface_node ${PROJECT_NAME})
-
-#############
-## Install ##
-#############
-
-# all install targets should use catkin DESTINATION variables
-# See http://ros.org/doc/api/catkin/html/adv_user_guide/variables.html
-
-## Mark executable scripts (Python etc.) for installation
-## in contrast to setup.py, you can choose the destination
-# install(PROGRAMS
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+# # Deps list
+# set(COMMON_DEPS
+#   rclpy
+#   rclcpp
+#   rclcpp_components
+#   carla_msgs  
+#   std_msgs
 # )
 
-## Mark libraries for installation
-install(TARGETS ${PROJECT_NAME}
-  carla_simulation_vehicle_interface_node
-  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-  RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
-)
+# # Find dependencies
+# find_package(ament_cmake REQUIRED
+#   ${COMMON_DEPS})
 
+find_package(ament_cmake REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_components REQUIRED)
+find_package(rclpy REQUIRED)
+find_package(carla_msgs REQUIRED)
+
+# Add nodes
+# add_executable(carla_vehicle_interface src/carla_vehicle_interface.cpp)
+# target_include_directories(carla_vehicle_interface PUBLIC
+#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#   $<INSTALL_INTERFACE:include>)
+# target_compile_features(carla_vehicle_interface PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+
+# Add components
+add_library(carla_vehicle_interface SHARED
+  src/components/carla_vehicle_interface.cpp
+)
+target_compile_definitions(carla_vehicle_interface
+  PRIVATE "carla_shell_bridge_BUILDING_DLL")
+ament_target_dependencies(carla_vehicle_interface
+  "rclcpp"
+  "rclcpp_components"
+  "carla_msgs"
+
+)
+rclcpp_components_register_nodes(carla_vehicle_interface "carla_shell_bridge::CarlaSimulationVehicleInterface")
+
+# Install component targets
 install(
-    FILES nodelet_plugins.xml
-    DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  TARGETS
+  carla_vehicle_interface
+
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
+
+# Install node targets
+# install(TARGETS 
+#   carla_vehicle_interface
+#   DESTINATION lib/${PROJECT_NAME})
+
+# Install Python nodes
+install(
+  PROGRAMS
+  scripts/map_loader.py
+  scripts/traffic_generator.py
+  DESTINATION
+  lib/${PROJECT_NAME}
 )
 
-## Mark other files for installation (e.g. launch and bag files, etc.)
-install(DIRECTORY
+# Install launch directory
+install(
+  DIRECTORY
   launch
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+  DESTINATION share/${PROJECT_NAME}/)
 
-install(PROGRAMS 
-  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
-catkin_install_python(PROGRAMS
-                      DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+file(GLOB YAML_CONFIG_FILES config/*.yaml)
+install(
+  FILES
+    ${YAML_CONFIG_FILES}
+  DESTINATION
+    share/${PROJECT_NAME}
+)
+
+# Install Python module
+ament_python_install_package(${PROJECT_NAME})
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  # the following line skips the linter which checks for copyrights
+  # comment the line when a copyright and license is added to all source files
+  set(ament_cmake_copyright_FOUND TRUE)
+  # the following line skips cpplint (only works in a git repo)
+  # comment the line when this package is in a git repo and when
+  # a copyright and license is added to all source files
+  set(ament_cmake_cpplint_FOUND TRUE)
+  ament_lint_auto_find_test_dependencies()
+endif()
+
+ament_package()

@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+# Copyright (c) 2021 Computer Vision Center (CVC) at the Universitat Autonoma de
+# Barcelona (UAB).
+#
+# This work is licensed under the terms of the MIT license.
+# For a copy, see <https://opensource.org/licenses/MIT>.
+
 import glob
 import os
 import sys
@@ -14,23 +20,26 @@ except IndexError:
 
 import carla
 from carla import VehicleLightState as vls
-import rospy
+import rclpy
+from rclpy.node import Node
 import time
 import logging
 from numpy import random
 
-
-class TrafficGenerator:
+"""
+This node spawns NPC vehicles in the CARLA environment.
+"""
+class TrafficGenerator(Node):
     def __init__(self):
-        rospy.init_node('traffic_generator')
+        super().__init__('traffic_generator')
         
         # Parameters
-        self.server_host = rospy.get_param('/traffic_generator/host', default='localhost')
-        self.server_port = rospy.get_param('/traffic_generator/port', default=2000)
-        self.timeout = rospy.get_param('/server_envirtraffic_generatoronment/timeout', default=10.0)
-        self.number_of_vehicles = rospy.get_param('/traffic_generator/number_of_vehicles', default=5)
-        self.spawn_radius = rospy.get_param('/traffic_generator/spawn_radius', default=100.0)
-        self.traffic_seed = rospy.get_param('/traffic_generator/seed', default=0)
+        self.server_host = self.declare_parameter('server_connection.host', 'localhost').get_parameter_value().string_value
+        self.server_port = self.declare_parameter('server_connection.port', 2000).get_parameter_value().integer_value
+        self.timeout = self.declare_parameter('server_connection.timeout', 10.0).get_parameter_value().double_value
+        self.number_of_vehicles = self.declare_parameter('server_environment.traffic_generation.number_of_vehicles', 5).get_parameter_value().integer_value
+        self.spawn_radius = self.declare_parameter('server_environment.traffic_generation.spawn_radius', 100.0).get_parameter_value().double_value
+        self.traffic_seed = self.declare_parameter('server_environment.traffic_generation.seed', 0).get_parameter_value().integer_value
 
         # Parameters not yet exposed to ROS
         self.traffic_manager_port = 8000
@@ -41,10 +50,10 @@ class TrafficGenerator:
         self.safe_spawn = True
         self.car_lights_on = False
         self.asynch = None
-
+        
         # Wait to make sure new map has been loaded by ros_bridge
         time.sleep(3.0)
-
+        
         # Setup CARLA
         self.client = carla.Client(self.server_host, self.server_port)
         self.client.set_timeout(self.timeout)
@@ -72,9 +81,9 @@ class TrafficGenerator:
             bps = [x for x in bps if int(x.get_attribute('generation')) == int_generation]
             return bps
         else:
-            rospy.logwarn("Actor Generation is not valid! No actor will be spawned.")
+            self.get_logger().warn("Actor Generation is not valid! No actor will be spawned.")
             return []
-        
+            
     def spawn_vehicles(self):
         """
         Generate vehicles in the CARLA simulator
@@ -109,7 +118,7 @@ class TrafficGenerator:
 
             spawn_points = self.world.get_map().get_spawn_points()
             filtered_spawn_points = []
-    
+      
             ego_vehicle = self.get_ego_vehicle(self.timeout)
             ego_vehicle_spawn = ego_vehicle.get_transform()
             
@@ -167,7 +176,7 @@ class TrafficGenerator:
                 else:
                     vehicles_list.append(response.actor_id)
 
-            rospy.loginfo('Spawned %d vehicles.' % (len(vehicles_list)))
+            self.get_logger().info('Spawned %d vehicles.' % (len(vehicles_list)))
 
             # Example of how to use Traffic Manager parameters
             traffic_manager.global_percentage_speed_difference(30.0)
@@ -184,11 +193,11 @@ class TrafficGenerator:
                 self.settings.synchronous_mode = False
                 self.world.apply_settings(self.settings)
 
-            rospy.loginfo('\ndestroying %d vehicles' % len(vehicles_list))
+            self.get_logger().info('\ndestroying %d vehicles' % len(vehicles_list))
             self.client.apply_batch([carla.command.DestroyActor(x) for x in vehicles_list])
 
             time.sleep(0.5)
-
+    
     def get_ego_vehicle(self, timeout):
         """
         Get the ego vehicle once it has spawned
@@ -213,15 +222,16 @@ class TrafficGenerator:
         return None
 
 def main():
-  try:
-    # Initialize ROS node
+    # Initialize ROS Node
+    rclpy.init()
+    
     traffic_gen_node = TrafficGenerator()
     traffic_gen_node.spawn_vehicles()
-  except rospy.ROSInterruptException:
-    pass
-
-if __name__ == "__main__":  
-  try: 
-    main()
-  except KeyboardInterrupt:
-    pass
+    
+    rclpy.shutdown()
+    
+if __name__ == '__main__':
+    try:
+        main()
+    except KeyboardInterrupt:
+        pass

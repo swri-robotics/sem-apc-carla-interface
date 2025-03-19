@@ -2,15 +2,15 @@
 
 ROS package to interface with CARLA topics and set up the CARLA simulation environment.
 
-ROS Version: `ROS1 Noetic`
+ROS Version: `ROS2 Humble`
 
 ## Running the Interface
 After cloning the package into your ROS workspace src directory and building your workspace, launch the interface with: 
 
-`roslaunch carla_shell_bridge main.launch`
+`ros2 launch carla_shell_bridge main.launch.py`
 
 ## Configuring CARLA
-Below is a list of all the different parameters that can be chnage to configure the CARLA simulator to help test different scenarios or performance. The parameters can be changed in `carla_interface/launch/main.launch`
+Below is a list of all the different parameters that can be chnage to configure the CARLA simulator to help test different scenarios or performance. The parameters can be changed in `carla_interface/config/carla_config.yaml`
 
 ### Server Connection Parameters:
 

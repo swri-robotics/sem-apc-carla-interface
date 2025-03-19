@@ -9,16 +9,20 @@
 
   <license>BSD</license>
 
-  <buildtool_depend>catkin</buildtool_depend>
-  <depend>carla_msgs</depend>
-  <depend>nodelet</depend>
-  <depend>rospy</depend>
-  <depend>std_msgs</depend>
-  <depend>swri_nodelet</depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
 
-  <!-- The export tag contains other, unspecified, tags -->
+  <depend>rclpy</depend>
+  <depend>rclcpp</depend>
+  <depend>rclcpp_components</depend>
+  <depend>std_msgs</depend>
+  <depend>carla_msgs</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
   <export>
-    <nodelet plugin="${prefix}/nodelet_plugins.xml"/>
+    <build_type>ament_cmake</build_type>
   </export>
 
 </package>
