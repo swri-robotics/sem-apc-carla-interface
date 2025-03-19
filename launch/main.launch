@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+CARLA Simulation Configuration
+This file holds all the main arguments to configure and set up your CARLA environment.
+NOTE: Setting any of these parameters on the command line will overwrite the arguments set here.
+ -->
+<launch>
+
+    <!-- Server Connection -->
+    <arg name='host' default='localhost' doc='IP to connect to CARLA server (set to &apos;localhost&apos; if running server locally)'/>
+    <arg name='port' default='2000' doc='Server port (usually 2000)'/>
+    <arg name='passive' default='False' doc='Enable/disable passive mode'/>
+    <arg name='synchronous_mode_wait_for_vehicle_control_command' default='false'/>
+    <arg name='synchronous_mode' default='true'/>
+    <arg name='fixed_delta_seconds' default='0.05'/>
+    <arg name='timeout' default='10' doc='Server timeout limit (seconds)'/>
+
+    <!-- Server Environment -->
+    <arg name="town" default='Town05_Opt' doc='Map to load on startup (either a predefined CARLA town (e.g. &apos;Town03&apos;), or a OpenDRIVE map file)'/>
+    <!-- Below are the layers of the map that can be added or removed to improve performance (Note: Only works with "Opt" maps) -->
+    <arg name='all' default='False' doc='Set to True to load all map layers regardless of values below'/>
+    <arg name='decals' default='False'/>
+    <arg name='foliage' default='True'/>
+    <arg name='parked_vehicles' default='False'/>
+    <arg name='particles' default='False'/>
+    <arg name='walls' default='True'/>
+
+    <!-- Traffic Generation -->
+    <arg name='number_of_vehicles' default='0' doc='Number of other vehicles to spawn in the simulations'/>
+    <arg name='spawn_radius' default='100.0' doc='Spawn radius from ego vehicle in meters'/>
+    <arg name='seed' default='0' doc='Set random device seed and deterministic mode for Traffic Manager'/>
+
+    <!-- Ego Vehcile -->
+    <arg name='role_name' default='ego_vehicle' doc='Role name of the ego vehicle'/>
+    <arg name="spawn_point_ego_vehicle" default="0,-2.5,1,0,0,0" doc='"x,y,z,roll,pitch,yaw" map coordinates to spawn the vehicle (Use "None" for random spawn)'/>
+    <arg name="spawn_sensors_only" default="False" doc='Set to true to only spawn the vehicle sensors'/>
+    
+
+    <include file="$(find carla_shell_bridge)/launch/interface.launch" pass_all_args="true"/>
+
+</launch>
