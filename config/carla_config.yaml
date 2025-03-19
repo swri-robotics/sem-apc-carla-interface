@@ -15,7 +15,7 @@
       timeout: 10.0               # (Default: 10.0)  Server timeout limit in seconds
 
     server_environment:
-      map: "Town12_Opt"           # (Default: Town05_Opt)  Map to load on startup (either a predefined CARLA town (e.g. 'Town03_Opt'), or a OpenDRIVE map file)')
+      map: "Town05_Opt"           # (Default: Town05_Opt)  Map to load on startup (either a predefined CARLA town (e.g. 'Town03_Opt'), or a OpenDRIVE map file)')
       map_layers:                 # Layers of the map that can be added or removed to improve performance (Note: Only works with "Opt" maps)
         all: False                # (Default: False)  Set to True to load all map layers regardless of values below
         decals: False             # (Default: False)

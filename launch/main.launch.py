@@ -16,7 +16,7 @@ package_name = 'carla_shell_bridge'
 def generate_launch_description():
    
     # Get simulation config parameters from yaml file 
-    carla_config_file_path = os.path.expanduser('~/shell_ws/src/carla-interface/config/carla_config.yaml')
+    carla_config_file_path = os.path.expanduser('~/shell_ws/src/sem-apc-carla-interface/config/carla_config.yaml')
     with open(carla_config_file_path, 'r') as f:
         config = yaml.safe_load(f)
         config = config['/**']['ros__parameters']
@@ -152,7 +152,7 @@ def generate_launch_description():
        package='rviz2',
        executable='rviz2',
        name='rviz2',
-       arguments=['-d' + os.path.expanduser('~/shell_ws/src/carla-interface/config/default_config.rviz')],
+       arguments=['-d' + os.path.expanduser('~/shell_ws/src/sem-apc-carla-interface/config/default_config.rviz')],
     )
     
     
