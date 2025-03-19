@@ -151,12 +151,12 @@ class TrafficGenerator:
                 else:
                     blueprint.set_attribute('role_name', 'autopilot')
 
-                # prepare the light state of the cars to spawn
+                # Prepare the light state of the cars to spawn
                 light_state = vls.NONE
                 if self.car_lights_on:
                     light_state = vls.Position | vls.LowBeam | vls.LowBeam
 
-                # spawn the cars and set their autopilot and light state all together
+                # Spawn the cars and set their autopilot and light state all together
                 batch.append(SpawnActor(blueprint, transform)
                     .then(SetAutopilot(FutureActor, True, traffic_manager.get_port()))
                     .then(SetVehicleLightState(FutureActor, light_state)))
@@ -169,7 +169,6 @@ class TrafficGenerator:
 
             rospy.loginfo('Spawned %d vehicles.' % (len(vehicles_list)))
 
-            # Example of how to use Traffic Manager parameters
             traffic_manager.global_percentage_speed_difference(30.0)
 
             while True:
