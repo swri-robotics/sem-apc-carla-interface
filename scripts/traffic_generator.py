@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2021 Computer Vision Center (CVC) at the Universitat Autonoma de
-# Barcelona (UAB).
-#
-# This work is licensed under the terms of the MIT license.
-# For a copy, see <https://opensource.org/licenses/MIT>.
-
 import glob
 import os
 import sys
@@ -160,12 +154,12 @@ class TrafficGenerator(Node):
                 else:
                     blueprint.set_attribute('role_name', 'autopilot')
 
-                # prepare the light state of the cars to spawn
+                # Prepare the light state of the cars to spawn
                 light_state = vls.NONE
                 if self.car_lights_on:
                     light_state = vls.Position | vls.LowBeam | vls.LowBeam
 
-                # spawn the cars and set their autopilot and light state all together
+                # Spawn the cars and set their autopilot and light state all together
                 batch.append(SpawnActor(blueprint, transform)
                     .then(SetAutopilot(FutureActor, True, traffic_manager.get_port()))
                     .then(SetVehicleLightState(FutureActor, light_state)))
@@ -178,7 +172,6 @@ class TrafficGenerator(Node):
 
             self.get_logger().info('Spawned %d vehicles.' % (len(vehicles_list)))
 
-            # Example of how to use Traffic Manager parameters
             traffic_manager.global_percentage_speed_difference(30.0)
 
             while True:
