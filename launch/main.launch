@@ -10,8 +10,8 @@ NOTE: Setting any of these parameters on the command line will overwrite the arg
     <arg name='host' default='localhost' doc='IP to connect to CARLA server (set to &apos;localhost&apos; if running server locally)'/>
     <arg name='port' default='2000' doc='Server port (usually 2000)'/>
     <arg name='passive' default='False' doc='Enable/disable passive mode'/>
-    <arg name='synchronous_mode_wait_for_vehicle_control_command' default='false'/>
-    <arg name='synchronous_mode' default='true'/>
+    <arg name='synchronous_mode_wait_for_vehicle_control_command' default='False'/>
+    <arg name='synchronous_mode' default='True'/>
     <arg name='fixed_delta_seconds' default='0.05'/>
     <arg name='timeout' default='10' doc='Server timeout limit (seconds)'/>
 
@@ -36,6 +36,6 @@ NOTE: Setting any of these parameters on the command line will overwrite the arg
     <arg name="spawn_sensors_only" default="False" doc='Set to true to only spawn the vehicle sensors'/>
     
 
-    <include file="$(find carla_shell_bridge)/launch/interface.launch" pass_all_args="true"/>
+    <include file="$(find carla_shell_bridge)/launch/interface.launch" pass_all_args="True"/>
 
 </launch>
