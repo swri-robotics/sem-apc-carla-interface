@@ -72,9 +72,9 @@ namespace carla_shell_bridge
 
       ROS_INFO_STREAM("Initializing simulation vehicle interface");
 
-      if (pnh.hasParam("invert_steering"))
+      if (nh.hasParam("invert_steering"))
       {
-        invert_steering_ = pnh.getParam("invert_steering", invert_steering_);
+        invert_steering_ = nh.getParam("invert_steering", invert_steering_);
         ROS_INFO_STREAM("Invert steering set to: " << (invert_steering_ ? "true" : "false"));
       }
       else
