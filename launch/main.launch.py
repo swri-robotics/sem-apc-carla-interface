@@ -11,7 +11,7 @@ from ament_index_python.packages import get_package_share_directory
 import os
 import yaml
 
-package_name = 'carla_shell_bridge'
+package_name = 'carla_shell_interface'
 
 def generate_launch_description():
    
@@ -53,7 +53,7 @@ def generate_launch_description():
     vehicle_filter_arg = DeclareLaunchArgument('vehicle_filter', default_value='vehicle.*')
 
     objects_definition_file = LaunchConfiguration('objects_definition_file')
-    objects_definition_file_arg = DeclareLaunchArgument('objects_definition_file', default_value=[os.path.join(get_package_share_directory('carla_shell_bridge'), 'launch'),
+    objects_definition_file_arg = DeclareLaunchArgument('objects_definition_file', default_value=[os.path.join(get_package_share_directory('carla_shell_interface'), 'launch'),
                                        '/objects.json'])    
 
     # Use comma separated format "x,y,z,roll,pitch,yaw", and parameter name spawn_point_<vehicle_name>. You can add
@@ -87,32 +87,6 @@ def generate_launch_description():
 
 
     # Nodes
-    carla_ros_bridge = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(get_package_share_directory('carla_ros_bridge')),
-                                       '/carla_ros_bridge.launch.py']),
-            launch_arguments={
-                'host': host,
-                'port': port,
-                'town': town,
-                'timeout': timeout,
-                'passive': passive,
-                'synchronous_mode': synchronous_mode,
-                'synchronous_mode_wait_for_vehicle_control_command': synchronous_mode_wait_for_vehicle_control_command,
-                'fixed_delta_seconds': fixed_delta_seconds,
-            }.items(),
-    )
-    
-    ego_vehicle = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(get_package_share_directory('carla_spawn_objects')),
-                                       '/carla_example_ego_vehicle.launch.py']),
-            launch_arguments={
-                'objects_definition_file': objects_definition_file,
-                'role_name': role_name,
-                'spawn_point_ego_vehicle': spawn_point_ego_vehicle,
-                'spawn_sensors_only': spawn_sensors_only,
-            }.items(),
-    )
-    
     carla_shell_interface = ComposableNodeContainer(
         name='carla_shell_interface_container',
         namespace='',
@@ -120,8 +94,8 @@ def generate_launch_description():
         executable='component_container',
         composable_node_descriptions=[
             ComposableNode(
-                package='carla_shell_bridge',
-                plugin='carla_shell_bridge::CarlaSimulationVehicleInterface',
+                package='carla_shell_interface',
+                plugin='carla_shell_interface::CarlaSimulationVehicleInterface',
                 name='carla_interface',
                 parameters=[config_file],
                 remappings=[('/car_cmd', '/carla/ego_vehicle/vehicle_control_cmd')]
@@ -131,7 +105,7 @@ def generate_launch_description():
     )
     
     map_loader_node = Node(
-        package='carla_shell_bridge',
+        package='carla_shell_interface',
         namespace='',
         executable='map_loader.py',
         name='map_loader',
@@ -140,7 +114,7 @@ def generate_launch_description():
     )
     
     traffic_gen_node = Node(
-        package='carla_shell_bridge',
+        package='carla_shell_interface',
         namespace='',
         executable='traffic_generator.py',
         name='traffic_generator',
@@ -175,9 +149,7 @@ def generate_launch_description():
         fixed_delta_seconds_arg,
         
         # Nodes
-        carla_ros_bridge,
-        ego_vehicle,
-        carla_shell_interface,
+        # carla_shell_interface,
         map_loader_node,
         traffic_gen_node,
         rviz_node

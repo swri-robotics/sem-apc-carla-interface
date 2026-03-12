@@ -1,17 +1,5 @@
 #!/usr/bin/env python3
 
-import glob
-import os
-import sys
-
-try:
-    sys.path.append(glob.glob('../carla/dist/carla-*%d.%d-%s.egg' % (
-        sys.version_info.major,
-        sys.version_info.minor,
-        'win-amd64' if os.name == 'nt' else 'linux-x86_64'))[0])
-except IndexError:
-    pass
-
 import carla
 import rclpy
 from rclpy.node import Node
@@ -29,6 +17,7 @@ class CarlaMapConfig(Node):
         self.server_host = self.declare_parameter('server_connection.host', 'localhost').get_parameter_value().string_value
         self.server_port = self.declare_parameter('server_connection.port', 2000).get_parameter_value().integer_value
         self.timeout = self.declare_parameter('server_connection.timeout', 10.0).get_parameter_value().double_value
+        self.map = self.declare_parameter('server_environment.map', 'Town05_Opt').get_parameter_value().string_value
         self.load_all = self.declare_parameter('server_environment.map_layers.all', False).get_parameter_value().bool_value
         self.load_buildings = self.declare_parameter('server_environment.map_layers.buildings', True).get_parameter_value().bool_value
         self.load_decals = self.declare_parameter('server_environment.map_layers.decals', False).get_parameter_value().bool_value
@@ -46,38 +35,34 @@ class CarlaMapConfig(Node):
         # Setup CARLA
         self.client = carla.Client(self.server_host, self.server_port)
         self.client.set_timeout(self.timeout)
+        self.client.load_world(self.map, map_layers=carla.MapLayer.NONE)
         self.world = self.client.get_world()
         self.settings = self.world.get_settings()
         self.world.wait_for_tick()
   
-    def map_unload(self):
+    def load_map_layers(self):
         """
-        Unload undesired layers of the map
+        Load desired layers of the map
         """
-        if self.load_all:
-            # Don't unload any map layers
-            self.get_logger().info("Loading default map layers.")
-            return
-
-        self.get_logger().info("Removing selected map layers.")
-        if not self.load_buildings:
-            self.world.unload_map_layer(carla.MapLayer.Buildings)
-        if not self.load_decals:
-            self.world.unload_map_layer(carla.MapLayer.Decals)
-        if not self.load_foliage:
-            self.world.unload_map_layer(carla.MapLayer.Foliage)
-        if not self.load_ground:
-            self.world.unload_map_layer(carla.MapLayer.Ground)
-        if not self.load_parked_vehicles:
-            self.world.unload_map_layer(carla.MapLayer.ParkedVehicles)
-        if not self.load_particles:
-            self.world.unload_map_layer(carla.MapLayer.Particles)
-        if not self.load_props:
-            self.world.unload_map_layer(carla.MapLayer.Props)
-        if not self.load_street_lights:
-            self.world.unload_map_layer(carla.MapLayer.StreetLights)
-        if not self.load_walls:
-            self.world.unload_map_layer(carla.MapLayer.Walls)
+        self.get_logger().info("Loading selected map layers.")
+        if self.load_buildings or self.load_all:
+            self.world.load_map_layer(carla.MapLayer.Buildings)
+        if self.load_decals or self.load_all:
+            self.world.load_map_layer(carla.MapLayer.Decals)
+        if self.load_foliage or self.load_all:
+            self.world.load_map_layer(carla.MapLayer.Foliage)
+        if self.load_ground or self.load_all:
+            self.world.load_map_layer(carla.MapLayer.Ground)
+        if self.load_parked_vehicles or self.load_all:
+            self.world.load_map_layer(carla.MapLayer.ParkedVehicles)
+        if self.load_particles or self.load_all:
+            self.world.load_map_layer(carla.MapLayer.Particles)
+        if self.load_props or self.load_all:
+            self.world.load_map_layer(carla.MapLayer.Props)
+        if self.load_street_lights or self.load_all:
+            self.world.load_map_layer(carla.MapLayer.StreetLights)
+        if self.load_walls or self.load_all:
+            self.world.load_map_layer(carla.MapLayer.Walls)
 
     def get_spectator_transform(self, vehicle_transform, d=5):
         """
@@ -108,7 +93,7 @@ class CarlaMapConfig(Node):
         Get the ego vehicle once it has spawned
         """
         start = time.time()
-        # Wait for Ego vehcile to spawn
+        # Wait for Ego vehicle to spawn
         while True:
             # Get all actors from the world
             actor_list = self.world.get_actors()
@@ -134,7 +119,7 @@ def main():
     rclpy.init()
 
     carla_map_config_node = CarlaMapConfig()
-    carla_map_config_node.map_unload()
+    carla_map_config_node.load_map_layers()
     carla_map_config_node.set_spectator_view()
 
     rclpy.shutdown()

@@ -18,11 +18,15 @@
       map: "Town05_Opt"           # (Default: Town05_Opt)  Map to load on startup (either a predefined CARLA town (e.g. 'Town03_Opt'), or a OpenDRIVE map file)')
       map_layers:                 # Layers of the map that can be added or removed to improve performance (Note: Only works with "Opt" maps)
         all: False                # (Default: False)  Set to True to load all map layers regardless of values below
+        buildings: False           # (Default: True)
         decals: False             # (Default: False)
-        foliage: True             # (Default: True)
+        foliage: False             # (Default: True)
+        ground: False              # (Default: True)
         parked_vehicles: False    # (Default: False)
         particles: False          # (Default: False)
-        walls: True               # (Default: True)
+        props: False               # (Default: True)
+        street_lights: False       # (Default: True)
+        walls: False               # (Default: True)
 
       traffic_generation:
         number_of_vehicles: 0     # (Default: 0)  Number of other vehicles to spawn in the simulations

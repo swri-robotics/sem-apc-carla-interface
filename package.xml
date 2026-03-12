@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>carla_shell_bridge</name>
+  <name>carla_shell_interface</name>
   <version>0.0.0</version>
-  <description>The carla_shell_bridge package. Creates an interface between student code packages and the CARLA ROS Bridge for vehicle control topics.</description>
+  <description>The carla_shell_interface package. Creates an interface between student code packages
+    and the CARLA ROS Bridge for vehicle control topics.</description>
 
   <maintainer email="fillip.cannard@swri.org">Fillip Cannard</maintainer>
 
@@ -16,7 +17,9 @@
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
   <depend>std_msgs</depend>
-  <depend>carla_msgs</depend>
+
+  <build_depend>carla_msgs</build_depend>
+  <exec_depend>carla_msgs</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
