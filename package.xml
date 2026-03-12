@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>carla_shell_interface</name>
+  <name>carla_interface</name>
   <version>0.0.0</version>
-  <description>The carla_shell_interface package. Creates an interface between student code packages
+  <description>The carla_interface package. Creates an interface between student code packages
     and the CARLA ROS Bridge for vehicle control topics.</description>
 
   <maintainer email="fillip.cannard@swri.org">Fillip Cannard</maintainer>

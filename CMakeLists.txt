@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(carla_shell_interface)
+project(carla_interface)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -37,13 +37,13 @@ add_library(carla_vehicle_interface SHARED
   src/components/carla_vehicle_interface.cpp
 )
 target_compile_definitions(carla_vehicle_interface
-  PRIVATE "carla_shell_interface_BUILDING_DLL")
+  PRIVATE "carla_interface_BUILDING_DLL")
 ament_target_dependencies(carla_vehicle_interface
   "rclcpp"
   "rclcpp_components"
   "carla_msgs"
 )
-rclcpp_components_register_nodes(carla_vehicle_interface "carla_shell_interface::CarlaSimulationVehicleInterface")
+rclcpp_components_register_nodes(carla_vehicle_interface "carla_interface::CarlaSimulationVehicleInterface")
 
 # Install component targets
 install(

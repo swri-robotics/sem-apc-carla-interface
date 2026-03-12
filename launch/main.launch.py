@@ -11,7 +11,7 @@ from ament_index_python.packages import get_package_share_directory
 import os
 import yaml
 
-package_name = 'carla_shell_interface'
+package_name = 'carla_interface'
 
 def generate_launch_description():
    
@@ -53,7 +53,7 @@ def generate_launch_description():
     vehicle_filter_arg = DeclareLaunchArgument('vehicle_filter', default_value='vehicle.*')
 
     objects_definition_file = LaunchConfiguration('objects_definition_file')
-    objects_definition_file_arg = DeclareLaunchArgument('objects_definition_file', default_value=[os.path.join(get_package_share_directory('carla_shell_interface'), 'launch'),
+    objects_definition_file_arg = DeclareLaunchArgument('objects_definition_file', default_value=[os.path.join(get_package_share_directory('carla_interface'), 'launch'),
                                        '/objects.json'])    
 
     # Use comma separated format "x,y,z,roll,pitch,yaw", and parameter name spawn_point_<vehicle_name>. You can add
@@ -94,8 +94,8 @@ def generate_launch_description():
         executable='component_container',
         composable_node_descriptions=[
             ComposableNode(
-                package='carla_shell_interface',
-                plugin='carla_shell_interface::CarlaSimulationVehicleInterface',
+                package=package_name,
+                plugin='carla_interface::CarlaSimulationVehicleInterface',
                 name='carla_interface',
                 parameters=[config_file],
                 remappings=[('/car_cmd', '/carla/ego_vehicle/vehicle_control_cmd')]
@@ -105,7 +105,7 @@ def generate_launch_description():
     )
     
     map_loader_node = Node(
-        package='carla_shell_interface',
+        package=package_name,
         namespace='',
         executable='map_loader.py',
         name='map_loader',
@@ -114,7 +114,7 @@ def generate_launch_description():
     )
     
     traffic_gen_node = Node(
-        package='carla_shell_interface',
+        package=package_name,
         namespace='',
         executable='traffic_generator.py',
         name='traffic_generator',
@@ -149,7 +149,7 @@ def generate_launch_description():
         fixed_delta_seconds_arg,
         
         # Nodes
-        # carla_shell_interface,
+        # carla_interface,
         map_loader_node,
         traffic_gen_node,
         rviz_node
