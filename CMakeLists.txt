@@ -64,6 +64,7 @@ install(
   PROGRAMS
   scripts/map_loader.py
   scripts/traffic_generator.py
+  scripts/hero_vehicle.py
   DESTINATION
   lib/${PROJECT_NAME}
 )

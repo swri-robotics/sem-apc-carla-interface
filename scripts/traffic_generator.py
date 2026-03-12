@@ -1,17 +1,5 @@
 #!/usr/bin/env python3
 
-import glob
-import os
-import sys
-
-try:
-    sys.path.append(glob.glob('../carla/dist/carla-*%d.%d-%s.egg' % (
-        sys.version_info.major,
-        sys.version_info.minor,
-        'win-amd64' if os.name == 'nt' else 'linux-x86_64'))[0])
-except IndexError:
-    pass
-
 import carla
 from carla import VehicleLightState as vls
 import rclpy
@@ -44,9 +32,6 @@ class TrafficGenerator(Node):
         self.safe_spawn = True
         self.car_lights_on = False
         self.asynch = None
-        
-        # Wait to make sure new map has been loaded by ros_bridge
-        time.sleep(3.0)
         
         # Setup CARLA
         self.client = carla.Client(self.server_host, self.server_port)
@@ -205,7 +190,7 @@ class TrafficGenerator(Node):
             # Find the ego vehicle
             for vehicle in vehicle_list:
                 # Ego vehicle found
-                if vehicle.attributes['role_name'] == 'ego_vehicle':
+                if vehicle.attributes['role_name'] == 'hero':
                     return vehicle
             # Check if we've timed out
             if time.time() - start > timeout:

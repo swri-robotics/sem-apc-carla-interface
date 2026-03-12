@@ -18,22 +18,20 @@
       map: "Town05_Opt"           # (Default: Town05_Opt)  Map to load on startup (either a predefined CARLA town (e.g. 'Town03_Opt'), or a OpenDRIVE map file)')
       map_layers:                 # Layers of the map that can be added or removed to improve performance (Note: Only works with "Opt" maps)
         all: False                # (Default: False)  Set to True to load all map layers regardless of values below
-        buildings: False           # (Default: True)
+        buildings: True           # (Default: True)
         decals: False             # (Default: False)
-        foliage: False             # (Default: True)
-        ground: False              # (Default: True)
+        foliage: True             # (Default: True)
+        ground: True              # (Default: True)
         parked_vehicles: False    # (Default: False)
         particles: False          # (Default: False)
-        props: False               # (Default: True)
-        street_lights: False       # (Default: True)
-        walls: False               # (Default: True)
+        props: True               # (Default: True)
+        street_lights: True       # (Default: True)
+        walls: True               # (Default: True)
 
       traffic_generation:
-        number_of_vehicles: 0     # (Default: 0)  Number of other vehicles to spawn in the simulations
+        number_of_vehicles: 10     # (Default: 0)  Number of other vehicles to spawn in the simulations
         spawn_radius: 100.0       # (Default: 100.0)  Spawn radius from ego vehicle in meters
         seed: 0                   # (Default: 0)  Set random device seed and deterministic mode for Traffic Manager
 
     ego_vehicle:
-      role_name: "ego_vehicle"    # (Default: ego_vehicle)  Role name of the ego vehicle
       spawn_point_ego_vehicle: "0,-2.5,1,0,0,0" # (Default: 0,-2.5,1,0,0,0)  "x,y,z,roll,pitch,yaw" map coordinates to spawn the vehicle (Use "None" for random spawn)
-      spawn_sensors_only: False   # (Default: False)  Set to true to only spawn the vehicle sensors

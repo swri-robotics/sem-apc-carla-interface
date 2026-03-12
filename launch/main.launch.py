@@ -46,24 +46,14 @@ def generate_launch_description():
     
     ##### Ego vehicle args #####
     
-    role_name = LaunchConfiguration('role_name')
-    role_name_arg = DeclareLaunchArgument('role_name', default_value=config['ego_vehicle']['role_name'])
-
     vehicle_filter = LaunchConfiguration('vehicle_filter')
-    vehicle_filter_arg = DeclareLaunchArgument('vehicle_filter', default_value='vehicle.*')
-
-    objects_definition_file = LaunchConfiguration('objects_definition_file')
-    objects_definition_file_arg = DeclareLaunchArgument('objects_definition_file', default_value=[os.path.join(get_package_share_directory('carla_interface'), 'launch'),
-                                       '/objects.json'])    
+    vehicle_filter_arg = DeclareLaunchArgument('vehicle_filter', default_value='vehicle.*') 
 
     # Use comma separated format "x,y,z,roll,pitch,yaw", and parameter name spawn_point_<vehicle_name>. You can add
     # as many spawn_point as vehicles defined in objects_definition_file
     spawn_point_ego_vehicle = LaunchConfiguration('spawn_point_ego_vehicle')
     spawn_point_ego_vehicle_arg = DeclareLaunchArgument('spawn_point_ego_vehicle', default_value=config['ego_vehicle']['spawn_point_ego_vehicle']) #-88.710991, -119.565231, 0.275307, 0.275307, 89.843742, 0.0
 
-    spawn_sensors_only = LaunchConfiguration('spawn_sensors_only')
-    spawn_sensors_only_arg = DeclareLaunchArgument('spawn_sensors_only', default_value=str(config['ego_vehicle']['spawn_sensors_only']))
-    
     ##### Map args #####
     
     town = LaunchConfiguration('town')
@@ -101,7 +91,16 @@ def generate_launch_description():
                 remappings=[('/car_cmd', '/carla/ego_vehicle/vehicle_control_cmd')]
             ),
         ],
-        output='both'
+        output='screen'
+    )
+    
+    hero_vehicle_node = Node(
+        package=package_name,
+        namespace='',
+        executable='hero_vehicle.py',
+        name='hero_vehicle',
+        parameters=[config_file],
+        output='screen',
     )
     
     map_loader_node = Node(
@@ -137,11 +136,8 @@ def generate_launch_description():
         host_arg,
         port_arg,
         timeout_arg,
-        role_name_arg,
         vehicle_filter_arg, 
-        objects_definition_file_arg,
         spawn_point_ego_vehicle_arg,
-        spawn_sensors_only_arg,
         town_arg,
         passive_arg,
         synchronous_mode_wait_for_vehicle_control_command_arg,
@@ -150,7 +146,8 @@ def generate_launch_description():
         
         # Nodes
         # carla_interface,
+        hero_vehicle_node,
         map_loader_node,
         traffic_gen_node,
-        rviz_node
+        # rviz_node
     ])

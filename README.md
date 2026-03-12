@@ -10,7 +10,7 @@ After cloning the package into your ROS workspace src directory and building you
 `ros2 launch carla_interface main.launch.py`
 
 ## Configuring CARLA
-Below is a list of all the different parameters that can be change to configure the CARLA simulator to help test different scenarios or enhance simulation performance. The parameters can be changed in [`config/carla_config.yaml`](config/carla_config.yaml)
+Below is a list of all the different parameters that can be changed to configure the CARLA simulator to help test different scenarios or enhance simulation performance. The parameters can be changed in [`config/carla_config.yaml`](config/carla_config.yaml)
 
 ### Server Connection Parameters:
 
@@ -65,8 +65,4 @@ Layers of the map that can be added or removed to improve performance (Note: Onl
 
 ### Ego Vehicle Parameters:
 
-`role_name`: Role name of the ego vehicle
-
 `spawn_point_ego_vehicle`: "x,y,z,roll,pitch,yaw" map coordinates to spawn the vehicle (Use "None" to spawn the ego vehicle in a random point on the road)
-
-`spawn_sensors_only`: Set to true to only spawn the vehicle sensors
