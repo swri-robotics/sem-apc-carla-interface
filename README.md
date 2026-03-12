@@ -37,15 +37,23 @@ Layers of the map that can be added or removed to improve performance (Note: Onl
 
 `all`: Set to True to load all map layers regardless of values below
 
-`decals`: Toggle's decals
+`buildings`: Toggles buildings
 
-`foliage`: Toggle's foliage
+`decals`: Toggles decals
 
-`parked_vehicles`: Toggle's parked_vehicles
+`foliage`: Toggles foliage
 
-`particles`: Toggle's particles
+`ground`: Toggles ground (excluding roads)
 
-`walls`: Toggle's walls
+`parked_vehicles`: Toggles parked vehicles
+
+`particles`: Toggles particles
+
+`props`: Toggles props
+
+`street_lamps`: Toggles street lamps
+
+`walls`: Toggles walls
 
 ### Traffic Generation Parameters:
 
