@@ -20,6 +20,7 @@ class HeroVehicle(Node):
         self.server_host = self.declare_parameter('server_connection.host', 'localhost').get_parameter_value().string_value
         self.server_port = self.declare_parameter('server_connection.port', 2000).get_parameter_value().integer_value
         self.timeout = self.declare_parameter('server_connection.timeout', 10.0).get_parameter_value().double_value
+        self.spawn_point_ego_vehicle = self.declare_parameter('ego_vehicle.spawn_point_ego_vehicle', '0.0, -2.5, 0.2, 0, 0, 0').get_parameter_value().string_value
         
         time.sleep(3.0) # Wait to make sure new map has been loaded
         
@@ -27,18 +28,23 @@ class HeroVehicle(Node):
         logging.debug("Spawning vehicle: {}".format(config.get("type")))
 
         bp_library = world.get_blueprint_library()
-        map_ = world.get_map()
 
         bp = bp_library.filter(config.get("type"))[0]
         bp.set_attribute("role_name", config.get("id"))
         bp.set_attribute("ros_name", config.get("id")) 
 
+        # Convert string ROS param to list of floats
+        spawn = [float(x) for x in self.spawn_point_ego_vehicle.split(',')]
+
         return  world.spawn_actor(
             bp,
-            map_.get_spawn_points()[0],
+            carla.Transform(
+                location=carla.Location(x=spawn[0], y=spawn[1], z=spawn[2]),
+                rotation=carla.Rotation(roll=spawn[3], pitch=spawn[4], yaw=spawn[5])
+            ),
             attach_to=None)
 
-
+    
     def setup_sensors(self, world, vehicle, sensors_config):
         bp_library = world.get_blueprint_library()
 
