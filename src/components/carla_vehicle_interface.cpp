@@ -19,7 +19,7 @@ using Float64 = std_msgs::msg::Float64;
  * vehicle in a more managable way.
  */
 
-namespace carla_shell_bridge
+namespace carla_interface
 {
     class CarlaSimulationVehicleInterface : public rclcpp::Node
     {
@@ -36,7 +36,6 @@ namespace carla_shell_bridge
 
     private:
         bool handbrake_ = false;
-        bool invert_steering_ = false;
         bool manual_control_ = false;
         float brake_ = 0.0;
         float steering_ = 0.0;
@@ -60,8 +59,6 @@ namespace carla_shell_bridge
         void LoadParams()
         {
             RCLCPP_INFO(get_logger(), "Loading parameters");
-            this->declare_parameter("ego_vehicle.invert_steering", false);
-            this->get_parameter("ego_vehicle.invert_steering", invert_steering_);
         }
 
         void EstablishPublishers()
@@ -99,7 +96,7 @@ namespace carla_shell_bridge
             manual_override_msg.data = true;
 
             // Limit steering to [-1.0, 1.0]
-            car_cmd_msg.steer = (invert_steering_ ? -1.0 : 1.0) * fmin(1.0, fmax(-1.0, steering_));
+            car_cmd_msg.steer = fmin(1.0, fmax(-1.0, steering_));
 
             // Configure throttle, brake, handbrake
             // car_cmd_msg.hand_brake = handbrake_;
@@ -164,8 +161,8 @@ namespace carla_shell_bridge
 
     }; // class CarlaSimulationVehicleInterface
 
-} // namespace carla_shell_bridge
+} // namespace carla_interface
 
 #include "rclcpp_components/register_node_macro.hpp"
 
-RCLCPP_COMPONENTS_REGISTER_NODE(carla_shell_bridge::CarlaSimulationVehicleInterface)
+RCLCPP_COMPONENTS_REGISTER_NODE(carla_interface::CarlaSimulationVehicleInterface)

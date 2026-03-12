@@ -77,8 +77,8 @@ def generate_launch_description():
 
 
     # Nodes
-    carla_shell_interface = ComposableNodeContainer(
-        name='carla_shell_interface_container',
+    carla_interface_node = ComposableNodeContainer(
+        name='carla_interface_container',
         namespace='',
         package='rclcpp_components',
         executable='component_container',
@@ -145,7 +145,7 @@ def generate_launch_description():
         fixed_delta_seconds_arg,
         
         # Nodes
-        # carla_interface,
+        carla_interface_node,
         hero_vehicle_node,
         map_loader_node,
         traffic_gen_node,
