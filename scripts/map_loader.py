@@ -42,8 +42,10 @@ class CarlaMapConfig(Node):
         Load desired layers of the map
         """
         self.get_logger().info("Loading selected map layers.")
+
         if self.load_all:
             self.world.load_map_layer(carla.MapLayer.All)
+            self.world.wait_for_tick()
             return
         if self.load_buildings:
             self.world.load_map_layer(carla.MapLayer.Buildings)
@@ -63,7 +65,7 @@ class CarlaMapConfig(Node):
             self.world.load_map_layer(carla.MapLayer.StreetLights)
         if self.load_walls:
             self.world.load_map_layer(carla.MapLayer.Walls)
-  
+        self.world.wait_for_tick()
 
 def main():
     # Initialize ROS node

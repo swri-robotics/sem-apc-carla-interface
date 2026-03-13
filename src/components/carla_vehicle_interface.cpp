@@ -64,7 +64,7 @@ namespace carla_interface
         void EstablishPublishers()
         {
             RCLCPP_INFO(get_logger(), "Establishing publishers");
-            car_cmd_pub_ = create_publisher<CarCmd>("carla/ego_vehicle/vehicle_control_cmd", 10);
+            car_cmd_pub_ = create_publisher<CarCmd>("carla/hero/vehicle_control_cmd", 10);
         }
 
         void EstablishSubscriptions()
