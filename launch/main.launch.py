@@ -149,5 +149,5 @@ def generate_launch_description():
         hero_vehicle_node,
         map_loader_node,
         traffic_gen_node,
-        # rviz_node
+        rviz_node
     ])

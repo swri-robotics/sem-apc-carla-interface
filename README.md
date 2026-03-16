@@ -33,7 +33,10 @@ Below is a list of all the different parameters that can be changed to configure
 `map`: Map that is loaded on startup (either a predefined CARLA town (e.g. 'Town01_Opt'), or a OpenDRIVE map file)
 
 #### Map Layers
-Layers of the map that can be added or removed to improve performance (Note: Only works with "Opt" maps)
+Layers of the map that can be added or removed to improve performance 
+
+> [!NOTE]
+> This only works with maps ending in "Opt"
 
 `all`: Set to True to load all map layers regardless of values below
 
