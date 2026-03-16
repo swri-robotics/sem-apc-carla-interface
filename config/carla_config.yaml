@@ -27,6 +27,7 @@
         props: True               # (Default: True)
         street_lights: True       # (Default: True)
         walls: True               # (Default: True)
+        none: False               # (Default: False)  Set to True to load no map layers regardless of values above
 
       traffic_generation:
         number_of_vehicles: 0     # (Default: 0)  Number of other vehicles to spawn in the simulations

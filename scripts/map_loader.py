@@ -28,6 +28,7 @@ class CarlaMapConfig(Node):
         self.load_props = self.declare_parameter('server_environment.map_layers.props', True).get_parameter_value().bool_value
         self.load_street_lights = self.declare_parameter('server_environment.map_layers.street_lights', True).get_parameter_value().bool_value
         self.load_walls = self.declare_parameter('server_environment.map_layers.walls', True).get_parameter_value().bool_value
+        self.load_none = self.declare_parameter('server_environment.map_layers.none', False).get_parameter_value().bool_value
 
         # Setup CARLA
         self.client = carla.Client(self.server_host, self.server_port)
@@ -43,6 +44,8 @@ class CarlaMapConfig(Node):
         """
         self.get_logger().info("Loading selected map layers.")
 
+        if self.load_none:
+            return
         if self.load_all:
             self.world.load_map_layer(carla.MapLayer.All)
             self.world.wait_for_tick()
