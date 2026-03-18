@@ -94,15 +94,6 @@ def generate_launch_description():
         output='screen'
     )
     
-    hero_vehicle_node = Node(
-        package=package_name,
-        namespace='',
-        executable='hero_vehicle.py',
-        name='hero_vehicle',
-        parameters=[config_file],
-        output='screen',
-    )
-    
     map_loader_node = Node(
         package=package_name,
         namespace='',
@@ -112,11 +103,11 @@ def generate_launch_description():
         output='screen',
     )
     
-    traffic_gen_node = Node(
+    vehicle_generator_node = Node(
         package=package_name,
         namespace='',
-        executable='traffic_generator.py',
-        name='traffic_generator',
+        executable='vehicle_generator.py',
+        name='vehicle_generator',
         parameters=[config_file],
         output='screen',
     )
@@ -146,8 +137,8 @@ def generate_launch_description():
         
         # Nodes
         carla_interface_node,
-        hero_vehicle_node,
+        # hero_vehicle_node,
         map_loader_node,
-        traffic_gen_node,
-        rviz_node
+        vehicle_generator_node,
+        # rviz_node
     ])
