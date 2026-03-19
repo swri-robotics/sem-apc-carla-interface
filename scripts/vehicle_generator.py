@@ -232,9 +232,6 @@ class VehicleGenerator(Node):
 
             self.get_logger().info('Spawned Hero vehicle and %d other vehicles' % (len(vehicles_list) - 1))
 
-            # Example of how to use Traffic Manager parameters
-            traffic_manager.global_percentage_speed_difference(30.0)
-
             sensors = self.setup_sensors(world, carla_utils.get_ego_vehicle(world), config.get("sensors", []))
 
             carla_utils.set_spectator_view(carla_utils.get_ego_vehicle(world), world)
@@ -255,6 +252,7 @@ class VehicleGenerator(Node):
                 world.apply_settings(settings)
 
             self.get_logger().info('Destroying %d vehicles' % len(vehicles_list))
+            client.apply_batch([DestroyActor(x) for x in sensors])
             client.apply_batch([DestroyActor(x) for x in vehicles_list])
 
             time.sleep(0.5)
