@@ -56,6 +56,9 @@ namespace carla_interface
         rclcpp::Subscription<Float64>::SharedPtr steering_sub_;
         rclcpp::Subscription<Float64>::SharedPtr throttle_sub_;
 
+        // QoS settings for publishers and subscribers
+        rclcpp::QoS command_qos = rclcpp::QoS(rclcpp::KeepLast(1)).reliable().durability_volatile();
+
         void LoadParams()
         {
             RCLCPP_INFO(get_logger(), "Loading parameters");
@@ -64,20 +67,20 @@ namespace carla_interface
         void EstablishPublishers()
         {
             RCLCPP_INFO(get_logger(), "Establishing publishers");
-            car_cmd_pub_ = create_publisher<CarCmd>("carla/hero/vehicle_control_cmd", 10);
+            car_cmd_pub_ = create_publisher<CarCmd>("carla/hero/vehicle_control_cmd", command_qos);
         }
 
         void EstablishSubscriptions()
         {
             RCLCPP_INFO(get_logger(), "Establishing subscribers");
-            brake_sub_ = create_subscription<Float64>("brake_command", 1,
-                                                        std::bind(&CarlaSimulationVehicleInterface::HandleBrakeInput, this, std::placeholders::_1));
-            gear_sub_ = create_subscription<std_msgs::msg::String>("gear_command", 1,
-                                                        std::bind(&CarlaSimulationVehicleInterface::HandleTransmissionInput, this, std::placeholders::_1));
-            steering_sub_ = create_subscription<Float64>("steering_command", 1,
-                                                        std::bind(&CarlaSimulationVehicleInterface::HandleSteeringInput, this, std::placeholders::_1));
-            throttle_sub_ = create_subscription<Float64>("throttle_command", 1,
-                                                        std::bind(&CarlaSimulationVehicleInterface::HandleThrottleInput, this, std::placeholders::_1));
+            brake_sub_ = create_subscription<Float64>("brake_command", command_qos,
+                                                      std::bind(&CarlaSimulationVehicleInterface::HandleBrakeInput, this, std::placeholders::_1));
+            gear_sub_ = create_subscription<std_msgs::msg::String>("gear_command", command_qos,
+                                                                   std::bind(&CarlaSimulationVehicleInterface::HandleTransmissionInput, this, std::placeholders::_1));
+            steering_sub_ = create_subscription<Float64>("steering_command", command_qos,
+                                                         std::bind(&CarlaSimulationVehicleInterface::HandleSteeringInput, this, std::placeholders::_1));
+            throttle_sub_ = create_subscription<Float64>("throttle_command", command_qos,
+                                                         std::bind(&CarlaSimulationVehicleInterface::HandleThrottleInput, this, std::placeholders::_1));
         }
 
         void EstablishTimers()
