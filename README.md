@@ -62,10 +62,10 @@ Layers of the map that can be added or removed to improve performance
 
 `number_of_vehicles`: Number of other vehicles to spawn in the simulations
 
-`spawn_radius`: Spawn radius from ego vehicle in meters
+`spawn_radius`: Spawn radius from hero vehicle in meters
 
 `seed`: Set random device seed and deterministic mode for Traffic Manager
 
-### Ego Vehicle Parameters:
+### Hero Vehicle Parameters:
 
-`spawn_point_ego_vehicle`: "x,y,z,roll,pitch,yaw" map coordinates to spawn the vehicle (Use "None" to spawn the ego vehicle in a random point on the road)
+`spawn_point_hero_vehicle`: "x,y,z,roll,pitch,yaw" map coordinates to spawn the vehicle (Use "None" to spawn the hero vehicle in a random point on the road)
