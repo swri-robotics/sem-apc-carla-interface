@@ -1,5 +1,5 @@
 from launch import LaunchDescription
-from launch_ros.actions import Node, ComposableNodeContainer, PushRosNamespace
+from launch_ros.actions import Node, ComposableNodeContainer, PushRosNamespace, SetParameter
 from launch_ros.descriptions import ComposableNode
 
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
@@ -44,15 +44,15 @@ def generate_launch_description():
     timeout_arg = DeclareLaunchArgument('timeout', default_value=str(config['server_connection']['timeout']), 
                                         description='Server timeout limit (seconds)')
     
-    ##### Ego vehicle args #####
+    ##### Hero vehicle args #####
     
     vehicle_filter = LaunchConfiguration('vehicle_filter')
     vehicle_filter_arg = DeclareLaunchArgument('vehicle_filter', default_value='vehicle.*') 
 
     # Use comma separated format "x,y,z,roll,pitch,yaw", and parameter name spawn_point_<vehicle_name>. You can add
     # as many spawn_point as vehicles defined in objects_definition_file
-    spawn_point_ego_vehicle = LaunchConfiguration('spawn_point_ego_vehicle')
-    spawn_point_ego_vehicle_arg = DeclareLaunchArgument('spawn_point_ego_vehicle', default_value=config['ego_vehicle']['spawn_point_ego_vehicle']) #-88.710991, -119.565231, 0.275307, 0.275307, 89.843742, 0.0
+    spawn_point_hero_vehicle = LaunchConfiguration('spawn_point_hero_vehicle')
+    spawn_point_hero_vehicle_arg = DeclareLaunchArgument('spawn_point_hero_vehicle', default_value=config['hero_vehicle']['spawn_point_hero_vehicle']) #-88.710991, -119.565231, 0.275307, 0.275307, 89.843742, 0.0
 
     ##### Map args #####
     
@@ -75,6 +75,8 @@ def generate_launch_description():
     fixed_delta_seconds = LaunchConfiguration('fixed_delta_seconds')
     fixed_delta_seconds_arg = DeclareLaunchArgument('fixed_delta_seconds', default_value=str(config['server_connection']['fixed_delta_seconds']))
 
+    # This sets use_sim_time=True for all subsequent nodes in this launch file, which is required for correct time synchronization with the CARLA server when using ROS time.
+    SetParameter(name='use_sim_time', value=True),
 
     # Nodes
     carla_interface_node = ComposableNodeContainer(
@@ -88,7 +90,7 @@ def generate_launch_description():
                 plugin='carla_interface::CarlaSimulationVehicleInterface',
                 name='carla_interface',
                 parameters=[config_file],
-                remappings=[('/car_cmd', '/carla/ego_vehicle/vehicle_control_cmd')]
+                remappings=[('/car_cmd', '/carla/hero/vehicle_control_cmd')]
             ),
         ],
         output='screen'
@@ -111,6 +113,33 @@ def generate_launch_description():
         parameters=[config_file],
         output='screen',
     )
+
+    collision_sensor_node = Node(
+        package=package_name,
+        namespace='',
+        executable='collision_sensor.py',
+        name='collision_sensor',
+        parameters=[config_file],
+        output='screen',
+    )
+
+    lane_invasion_sensor_node = Node(
+        package=package_name,
+        namespace='',
+        executable='lane_invasion_sensor.py',
+        name='lane_invasion_sensor',
+        parameters=[config_file],
+        output='screen',
+    )
+
+    speedometer_node = Node(
+        package=package_name,
+        namespace='',
+        executable='speedometer.py',
+        name='speedometer',
+        parameters=[config_file],
+        output='screen',
+    )
     
     rviz_node = Node(
        package='rviz2',
@@ -128,7 +157,7 @@ def generate_launch_description():
         port_arg,
         timeout_arg,
         vehicle_filter_arg, 
-        spawn_point_ego_vehicle_arg,
+        spawn_point_hero_vehicle_arg,
         town_arg,
         passive_arg,
         synchronous_mode_wait_for_vehicle_control_command_arg,
@@ -137,8 +166,10 @@ def generate_launch_description():
         
         # Nodes
         carla_interface_node,
-        # hero_vehicle_node,
         map_loader_node,
         vehicle_generator_node,
+        collision_sensor_node,
+        lane_invasion_sensor_node,
+        speedometer_node,
         # rviz_node
     ])

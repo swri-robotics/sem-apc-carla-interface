@@ -7,7 +7,7 @@ import time
 import math
 
 """
-This node loads the CARLA map, unloads/loads map layers, and sets the server spectator camera behind the ego vehicle on spawn.
+This node loads the CARLA map, unloads/loads map layers
 """
 class CarlaMapConfig(Node):
     def __init__(self):
@@ -35,7 +35,6 @@ class CarlaMapConfig(Node):
         self.client.set_timeout(self.timeout)
         self.client.load_world(self.map, map_layers=carla.MapLayer.NONE)
         self.world = self.client.get_world()
-        self.settings = self.world.get_settings()
         self.world.wait_for_tick()
   
     def load_map_layers(self):

@@ -3,26 +3,24 @@ import time
 import math
 
 
-def get_ego_vehicle(world, timeout=10.0):
+def get_hero_vehicle(world, timeout=10.0):
     """
-    Get the ego vehicle once it has spawned
+    Get the hero vehicle once it has spawned
     """
     start = time.time()
-    # Wait for Ego vehcile to spawn
+    # Wait for Hero vehicle to spawn
     while True:
-        # Get all actors from the world
-        actor_list = world.get_actors()
         # Filter out everything except vehicle actors
-        vehicle_list = actor_list.filter('vehicle.*')
-        # Find the ego vehicle
+        vehicle_list = world.get_actors().filter('vehicle.*')
+        # Find the hero vehicle
         for vehicle in vehicle_list:
-        # Ego vehicle found
+        # Hero vehicle found
             if vehicle.attributes['role_name'] == 'hero':
                 return vehicle
         # Check if we've timed out
         if time.time() - start > timeout:
             break
-        # Wait a second to see if ego vehicle will spawn
+        # Wait a second to see if hero vehicle will spawn
         time.sleep(1.0)
         
     return None
@@ -38,10 +36,10 @@ def get_spectator_transform(vehicle_transform, d=5):
 
 def set_spectator_view(vehicle, world):
     """
-    Set the spectator camera to start behind the ego vehicle
+    Set the spectator camera to start behind the hero vehicle
     """
     try:
-        # Wait for the ego vehicle to drop before setting the spectator view position
+        # Wait for the hero vehicle to drop before setting the spectator view position
         time.sleep(1.0)
         # Setup the spectator camera
         spectator = world.get_spectator()

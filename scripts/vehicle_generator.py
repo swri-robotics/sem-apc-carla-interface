@@ -34,7 +34,7 @@ class VehicleGenerator(Node):
         self.timeout = self.declare_parameter('server_connection.timeout', 10.0).get_parameter_value().double_value
         self.number_of_vehicles = self.declare_parameter('server_environment.traffic_generation.number_of_vehicles', 5).get_parameter_value().integer_value + 1 # +1 for the hero vehicle
         self.traffic_seed = self.declare_parameter('server_environment.traffic_generation.seed', 0).get_parameter_value().integer_value
-        self.spawn_point_hero_vehicle = self.declare_parameter('ego_vehicle.spawn_point_ego_vehicle', '0.0, 2.5, 0.2, 0, 0, 0').get_parameter_value().string_value
+        self.spawn_point_hero_vehicle = self.declare_parameter('hero_vehicle.spawn_point_hero_vehicle', '0.0, 2.5, 0.2, 0, 0, 0').get_parameter_value().string_value
 
         # Parameters not yet exposed to ROS
         self.tm_port = 8000
@@ -232,9 +232,9 @@ class VehicleGenerator(Node):
 
             self.get_logger().info('Spawned Hero vehicle and %d other vehicles' % (len(vehicles_list) - 1))
 
-            sensors = self.setup_sensors(world, carla_utils.get_ego_vehicle(world), config.get("sensors", []))
+            sensors = self.setup_sensors(world, carla_utils.get_hero_vehicle(world), config.get("sensors", []))
 
-            carla_utils.set_spectator_view(carla_utils.get_ego_vehicle(world), world)
+            carla_utils.set_spectator_view(carla_utils.get_hero_vehicle(world), world)
 
             while True:
                 if not self.asynch and synchronous_master:

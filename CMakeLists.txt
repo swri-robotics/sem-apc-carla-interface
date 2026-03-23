@@ -62,7 +62,10 @@ install(
 # Install Python nodes
 install(
   PROGRAMS
+  scripts/collision_sensor.py
+  scripts/lane_invasion_sensor.py
   scripts/map_loader.py
+  scripts/speedometer.py
   scripts/vehicle_generator.py
   DESTINATION
   lib/${PROJECT_NAME}
