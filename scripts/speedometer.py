@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ROS node publishes the speed of the hero vehicle in the CARLA simulator.
+ROS node publishes the speed of the hero vehicle in km/h in the CARLA simulator.
 """
 
 import math
@@ -44,6 +44,9 @@ class Speedometer(Node):
         
         # Convert velocity vector to speed in m/s
         speed = math.sqrt(velocity.x ** 2 + velocity.y ** 2 + velocity.z ** 2)
+
+        # Convert m/s to km/h
+        speed *= 3.6
 
         msg = Float32()
         msg.data = float(speed)

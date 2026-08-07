@@ -191,22 +191,24 @@ class VehicleGenerator(Node):
                 if blueprint.has_attribute('driver_id'):
                     driver_id = random.choice(blueprint.get_attribute('driver_id').recommended_values)
                     blueprint.set_attribute('driver_id', driver_id)
+                # Set up hero vehicle attributes
                 if self.hero:
                     blueprint = world.get_blueprint_library().filter(config.get("type"))[0]
                     blueprint.set_attribute('role_name', config.get("id"))
                     blueprint.set_attribute("ros_name", config.get("id")) 
+                    blueprint.set_attribute('color', '190,10,20')
                 else:
                     blueprint.set_attribute('role_name', 'autopilot')
 
                 # Spawn the hero vehicle
                 if self.hero:
                     if self.spawn_point_hero_vehicle.lower() != "none":
-                        self.get_logger().info("Spawning hero vehicle in custom spawn point: " + self.spawn_point_hero_vehicle)
+                        self.get_logger().info("Spawning hero vehicle at custom spawn point: " + self.spawn_point_hero_vehicle)
                         spawn = [float(x) for x in self.spawn_point_hero_vehicle.split(',')]
                         hero_transform = carla.Transform(location=carla.Location(x=spawn[0], y=spawn[1], z=spawn[2]),
                                 rotation=carla.Rotation(roll=spawn[3], pitch=spawn[4], yaw=spawn[5]))
                     else:
-                        self.get_logger().info("Spawning hero vehicle in default spawn point of the map")
+                        self.get_logger().info("Spawning hero vehicle at default spawn point of the map")
                         hero_transform = transform
                         
                     batch.append(SpawnActor(blueprint, hero_transform)
