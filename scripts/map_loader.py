@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+ROS node loads the CARLA map and unloads/loads map layers
+"""
 
 import carla
 import rclpy
@@ -6,9 +9,6 @@ from rclpy.node import Node
 import time
 import math
 
-"""
-This node loads the CARLA map, unloads/loads map layers
-"""
 class CarlaMapConfig(Node):
     def __init__(self):
         super().__init__('map_loader')

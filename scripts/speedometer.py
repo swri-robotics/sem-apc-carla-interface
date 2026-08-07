@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+ROS node publishes the speed of the hero vehicle in the CARLA simulator.
+"""
 
 import math
 import carla

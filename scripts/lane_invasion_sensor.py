@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+ROS node publishes lane invasion events for the hero vehicle in the CARLA simulator.
+"""
 
 import carla
 import rclpy

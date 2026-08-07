@@ -75,8 +75,8 @@ def generate_launch_description():
     fixed_delta_seconds = LaunchConfiguration('fixed_delta_seconds')
     fixed_delta_seconds_arg = DeclareLaunchArgument('fixed_delta_seconds', default_value=str(config['server_connection']['fixed_delta_seconds']))
 
-    # This sets use_sim_time=True for all subsequent nodes in this launch file, which is required for correct time synchronization with the CARLA server when using ROS time.
-    SetParameter(name='use_sim_time', value=True),
+    # This sets use_sim_time=True for all nodes in this launch file.
+    use_sim_time = SetParameter(name='use_sim_time', value=True)
 
     # Nodes
     carla_interface_node = ComposableNodeContainer(
@@ -141,11 +141,20 @@ def generate_launch_description():
         output='screen',
     )
     
+    hero_tf_broadcaster_node = Node(
+        package=package_name,
+        namespace='',
+        executable='hero_tf_broadcaster.py',
+        name='hero_tf_broadcaster',
+        parameters=[config_file],
+        output='screen',
+    )
+
     rviz_node = Node(
-       package='rviz2',
-       executable='rviz2',
-       name='rviz2',
-       arguments=['-d' + os.path.expanduser('~/shell_ws/src/sem-apc-carla-interface/config/default_config.rviz')],
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        arguments=['-d' + os.path.expanduser('~/shell_ws/src/sem-apc-carla-interface/config/default_config.rviz')],
     )
     
     
@@ -163,6 +172,9 @@ def generate_launch_description():
         synchronous_mode_wait_for_vehicle_control_command_arg,
         synchronous_mode_arg,
         fixed_delta_seconds_arg,
+
+        # Global parameters
+        use_sim_time,
         
         # Nodes
         carla_interface_node,
@@ -171,5 +183,6 @@ def generate_launch_description():
         collision_sensor_node,
         lane_invasion_sensor_node,
         speedometer_node,
-        # rviz_node
+        hero_tf_broadcaster_node,
+        rviz_node
     ])

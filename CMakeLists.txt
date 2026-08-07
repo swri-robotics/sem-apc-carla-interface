@@ -65,6 +65,7 @@ install(
   scripts/collision_sensor.py
   scripts/lane_invasion_sensor.py
   scripts/map_loader.py
+  scripts/hero_tf_broadcaster.py
   scripts/speedometer.py
   scripts/vehicle_generator.py
   DESTINATION

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-
-import weakref
+"""
+ROS node publishes collision events for the hero vehicle in the CARLA simulator.
+"""
 
 import carla
 import rclpy

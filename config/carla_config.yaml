@@ -15,9 +15,9 @@
       timeout: 10.0               # (Default: 10.0)  Server timeout limit in seconds
 
     server_environment:
-      map: "Town03_Opt"           # (Default: Town05_Opt)  Map to load on startup (either a predefined CARLA town (e.g. 'Town03_Opt'), or a OpenDRIVE map file)')
+      map: "Town01_Opt"           # (Default: Town01_Opt)  Map to load on startup (either a predefined CARLA town (e.g. 'Town03_Opt'), or a OpenDRIVE map file)')
       map_layers:                 # Layers of the map that can be added or removed to improve performance (Note: Only works with "Opt" maps)
-        all: False                # (Default: False)  Set to True to load all map layers regardless of values below
+        all: False                # (Default: False)  Set to True to load all map layers regardless of values below (Setting "none" to true will override this setting)
         buildings: True           # (Default: True)
         decals: False             # (Default: False)
         foliage: True             # (Default: True)
@@ -30,8 +30,8 @@
         none: False               # (Default: False)  Set to True to load no map layers regardless of values above
 
       traffic_generation:
-        number_of_vehicles: 40     # (Default: 0)  Number of other vehicles to spawn in the simulations
-        seed: 0                   # (Default: 0)  Set random device seed and deterministic mode for Traffic Manager
+        number_of_vehicles: 0     # (Default: 0)  Number of other vehicles to spawn in the simulations
+        seed: 0                   # (Default: 0)  Set seed for deterministic mode for Traffic Manager (Set to -1 for random seed)
 
     hero_vehicle:
-      spawn_point_hero_vehicle: "None" # (Default: 0,2.5,1,0,0,0)  "x,y,z,roll,pitch,yaw" map coordinates to spawn the vehicle (Use "None" for the default spawn point of the map)
+      spawn_point_hero_vehicle: "None" # (Default: 0,2.5,1,0,0,0)  "x,y,z,roll,pitch,yaw" map coordinates to spawn the vehicle (Set to "None" for the default spawn point of the map based on the seed)

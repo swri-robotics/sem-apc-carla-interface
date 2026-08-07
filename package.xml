@@ -16,7 +16,10 @@
   <depend>rclpy</depend>
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
   <depend>std_msgs</depend>
+  <depend>tf_transformations</depend>
 
   <build_depend>carla_msgs</build_depend>
   <exec_depend>carla_msgs</exec_depend>

@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
-
-# Copyright (c) 2021 Computer Vision Center (CVC) at the Universitat Autonoma de
-# Barcelona (UAB).
-#
-# This work is licensed under the terms of the MIT license.
-# For a copy, see <https://opensource.org/licenses/MIT>.
+"""
+ROS node generates hero vehicle and other npc vehicles in the CARLA simulator 
+and sets up sensors for the hero vehicle.
+"""
 
 import json
 import math
@@ -33,7 +31,7 @@ class VehicleGenerator(Node):
         self.server_port = self.declare_parameter('server_connection.port', 2000).get_parameter_value().integer_value
         self.timeout = self.declare_parameter('server_connection.timeout', 10.0).get_parameter_value().double_value
         self.number_of_vehicles = self.declare_parameter('server_environment.traffic_generation.number_of_vehicles', 5).get_parameter_value().integer_value + 1 # +1 for the hero vehicle
-        self.traffic_seed = self.declare_parameter('server_environment.traffic_generation.seed', 0).get_parameter_value().integer_value
+        self.traffic_seed = self.declare_parameter('server_environment.traffic_generation.seed', -1).get_parameter_value().integer_value
         self.spawn_point_hero_vehicle = self.declare_parameter('hero_vehicle.spawn_point_hero_vehicle', '0.0, 2.5, 0.2, 0, 0, 0').get_parameter_value().string_value
 
         # Parameters not yet exposed to ROS
@@ -126,7 +124,7 @@ class VehicleGenerator(Node):
         client = carla.Client(self.server_host, self.server_port)
         client.set_timeout(self.timeout)
         synchronous_master = False
-        random.seed(self.seed if self.seed is not None else int(time.time()))
+        random.seed(self.traffic_seed if self.traffic_seed != -1 else int(time.time()))
 
         try:
             world = client.get_world()
@@ -138,8 +136,8 @@ class VehicleGenerator(Node):
             if self.hybrid:
                 traffic_manager.set_hybrid_physics_mode(True)
                 traffic_manager.set_hybrid_physics_radius(70.0)
-            if self.seed is not None:
-                traffic_manager.set_random_device_seed(self.seed)
+            if self.traffic_seed != -1:
+                traffic_manager.set_random_device_seed(self.traffic_seed)
 
             settings = world.get_settings()
             if not self.asynch:
@@ -200,7 +198,7 @@ class VehicleGenerator(Node):
                 else:
                     blueprint.set_attribute('role_name', 'autopilot')
 
-                # spawn the cars and set their autopilot and light state all together
+                # Spawn the hero vehicle
                 if self.hero:
                     if self.spawn_point_hero_vehicle.lower() != "none":
                         self.get_logger().info("Spawning hero vehicle in custom spawn point: " + self.spawn_point_hero_vehicle)
@@ -214,6 +212,7 @@ class VehicleGenerator(Node):
                     batch.append(SpawnActor(blueprint, hero_transform)
                         .then(SetAutopilot(FutureActor, False, traffic_manager.get_port())))
                     self.hero = False
+                # Spawn the rest of the vehicles
                 else:
                     batch.append(SpawnActor(blueprint, transform)
                         .then(SetAutopilot(FutureActor, True, traffic_manager.get_port())))
