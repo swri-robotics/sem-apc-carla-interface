@@ -40,10 +40,7 @@ namespace carla_interface
         float brake_ = 0.0;
         float steering_ = 0.0;
         float throttle_ = 0.0;
-
         std::string gear_input_;
-        std_msgs::msg::Bool manual_override_msg;
-        CarCmd carla_control_;
 
         rclcpp::TimerBase::SharedPtr update_car_cmd_;
 
@@ -87,7 +84,7 @@ namespace carla_interface
         {
             RCLCPP_INFO(get_logger(), "Establishing timer");
             // Send the control message to CARLA once every 100ms
-            update_car_cmd_ = create_wall_timer(std::chrono::milliseconds(100), std::bind(&CarlaSimulationVehicleInterface::update, this));
+            update_car_cmd_ = create_wall_timer(std::chrono::milliseconds(50), std::bind(&CarlaSimulationVehicleInterface::update, this));
         }
 
         // Callback methods
@@ -95,14 +92,11 @@ namespace carla_interface
         {
             auto car_cmd_msg = CarCmd();
 
-            // Set manual override in Carla to true
-            manual_override_msg.data = true;
-
             // Limit steering to [-1.0, 1.0]
             car_cmd_msg.steer = fmin(1.0, fmax(-1.0, steering_));
 
             // Configure throttle, brake, handbrake
-            // car_cmd_msg.hand_brake = handbrake_;
+            car_cmd_msg.hand_brake = handbrake_;
             if (handbrake_ || fabs(brake_) >= 0.01)
             {
                 // Hand brake is engaged, or brake is engaged
@@ -134,7 +128,7 @@ namespace carla_interface
                 car_cmd_msg.gear = 0;
                 car_cmd_msg.reverse = false;
             }
-            car_cmd_msg.manual_gear_shift = true;
+            car_cmd_msg.manual_gear_shift = false;
 
             if (!manual_control_)
             {

@@ -197,6 +197,7 @@ class VehicleGenerator(Node):
                     blueprint.set_attribute('role_name', config.get("id"))
                     blueprint.set_attribute("ros_name", config.get("id")) 
                     blueprint.set_attribute('color', '190,10,20')
+                    blueprint.set_attribute('terramechanics', 'true')
                 else:
                     blueprint.set_attribute('role_name', 'autopilot')
 
@@ -211,8 +212,7 @@ class VehicleGenerator(Node):
                         self.get_logger().info("Spawning hero vehicle at default spawn point of the map")
                         hero_transform = transform
                         
-                    batch.append(SpawnActor(blueprint, hero_transform)
-                        .then(SetAutopilot(FutureActor, False, traffic_manager.get_port())))
+                    batch.append(SpawnActor(blueprint, hero_transform))
                     self.hero = False
                 # Spawn the rest of the vehicles
                 else:
