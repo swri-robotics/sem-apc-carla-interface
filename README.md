@@ -20,9 +20,9 @@ Below is a list of all the different parameters that can be changed to configure
 
 `passive`: Toggles passive mode for the simulation
 
-`synchronous_mode`: Toggles the simulation from syncronous mode to asynchronous mode
+`synchronous_mode`: Toggles the simulation from synchronous mode to asynchronous mode
 
-`synchronous_mode_wait_for_vehicle_control_command`: Toggles the simulation to syncronous mode and waits for a vehicle command
+`synchronous_mode_wait_for_vehicle_control_command`: Toggles the simulation to synchronous mode and waits for a vehicle command
 
 `fixed_delta_seconds`: Indirectly controls the speed of the simulation
 
