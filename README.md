@@ -1,3 +1,6 @@
+> [!Caution]
+> The Shell Autonomous Programming Competition no longer uses ROS1, making this branch obsolete. This branch is here only for reference and should not be used for the competition moving forward. For the official branch used in the competition, see the [ROS2 branch](https://github.com/swri-robotics/sem-apc-carla-interface/tree/ros2).
+
 # CARLA Interface
 
 ROS package to interface with CARLA topics and set up the CARLA simulation environment.
